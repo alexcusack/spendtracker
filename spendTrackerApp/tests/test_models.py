@@ -17,8 +17,10 @@ class ChargeModelFunctionalTests(TestCase):
 	def testSumByRanges(self):
 		Charge.save_new_charge(self.user, 12)
 		Charge.save_new_charge(self.user, 34)
-		s = Charge.get_sums_by_range()
-		self.assertEqual(s.get('amount__sum'), 46)
+		week_charges = Charge.get_charges_since_start_of_week()
+		self.assertEqual(week_charges, 46)
+		day_charges = Charge.get_charges_since_start_of_day()
+		self.assertEqual(day_charges, 46)
 
 class UserModelFunctionalTests(TestCase):
 	def setUp(self):

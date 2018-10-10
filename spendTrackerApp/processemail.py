@@ -24,15 +24,37 @@ def post_handler(request):
 	chargeAmount = getCurrentChargeAmount(json.loads(request.body.decode('utf-8')))
 	print(f'found charge amount of {chargeAmount}')
 	Charge.save_new_charge(user.first(), chargeAmount) # save the new charge amount
-	charge_report = Charge.get_sums_by_range()
-	text_message = constructTextMessage(charge_report)
-	pprint(text_message)
-	sendText(text_message, '6164431505')
+	charges_this_week = Charge.get_charges_since_start_of_week()
+	charges_today = Charge.get_charges_since_start_of_day()
+	try: 
+		text_message = constructTextMessage(chargeAmount, charges_this_week, charges_today)
+	except Exception as err: 
+		print(err.args)
+		return HttpResponse(status=404)
+	else: 
+		pprint(text_message)
+		sendText(text_message, '6164431505')
+		return HttpResponse(status=201)
 
 
-def constructTextMessage(charge):
+def constructTextMessage(current_charge, charges_this_week, charges_today):
 	# fix this: we don't want to return and send a string in the case of not 
 	# being able to send a text, else we'll text the error message... :/ 
-	if charge == None:
-		return "Was unable to parse a chage amount from {0}".format(charge)
-	return "{charge} was just spent".format(charge=charge)
+	if charges_this_week == None or charges_today == None:
+		raise Exception("expected charges_this_week and charges_today to be non-null values")
+	return """
+		{current_charge} was just spent. 
+		{charges_today} so far today. 
+		{charges_this_week} so far this week.
+	""".format(
+			current_charge=formatAsUSD(current_charge),
+			charges_today=formatAsUSD(charges_today),
+			charges_this_week=formatAsUSD(charges_this_week)
+		)
+
+
+def formatAsUSD(amount):
+	return '${}'.format(amount / 100)
+
+
+

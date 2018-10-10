@@ -32,6 +32,34 @@ class Charge(models.Model):
         new_charge = Charge(user_id = user, amount=amount, vendor='not set', time_of_charge=timezone.now())
         return new_charge.save()
 
-    def get_sums_by_range():
-        return Charge.objects.aggregate(Sum('amount'))
+    def get_charges_since_start_of_week():
+        sum = 0
+        for charge in Charge.objects.raw(
+            # we can't do a summation here because Django requires including the 
+            # primary key in the query result when working with raw queries.
+            """
+            select id, amount
+            from "spendTrackerApp_charge" 
+            where time_of_charge >= date_trunc('week', now());
+            """
+        ):
+            sum += charge.amount
+        return sum
+
+    def get_charges_since_start_of_day(): 
+        sum = 0
+        for charge in Charge.objects.raw(
+            """
+            select id, amount
+            from "spendTrackerApp_charge" 
+            where time_of_charge >= date_trunc('day', now());
+            """
+        ):
+            sum += charge.amount
+        return sum
+
+
+
+
+
 
