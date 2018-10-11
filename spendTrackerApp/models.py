@@ -52,7 +52,7 @@ class Charge(models.Model):
             """
             select id, amount
             from "spendTrackerApp_charge" 
-            where time_of_charge >= date_trunc('day', now());
+            where time_of_charge >= date_trunc('day', now()::date - interval '7 hours');
             """
         ):
             sum += charge.amount
