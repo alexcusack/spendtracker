@@ -27,7 +27,7 @@ def _asCents(dollarString):
 	return int(round(float(dollarString)*100))
 
 
-def getCloudMailData(data):
+def getCloudMailAmount(data):
 	chargeAmount = _getChargeAmount(_getChargeString(data['plain']))
 	return _asCents(chargeAmount[0])
 
