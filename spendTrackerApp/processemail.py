@@ -7,7 +7,7 @@ import logging
 from pprint import pprint
 from .sendtext import sendText
 from .extractEmailContents import (
-	getCurrentChargeAmount
+	getCloudMailAmount
 )
 
 from .models import User, Charge
@@ -21,7 +21,7 @@ def post_handler(request):
 		print('no matching user was found')
 		return None
 	print('hello', 'world')
-	chargeAmount = getCurrentChargeAmount(json.loads(request.body.decode('utf-8')))
+	chargeAmount = getCloudMailAmount(json.loads(request.body.decode('utf-8')))
 	print(f'found charge amount of {chargeAmount}')
 	Charge.save_new_charge(user.first(), chargeAmount) # save the new charge amount
 	charges_this_week = Charge.get_charges_since_start_of_week()

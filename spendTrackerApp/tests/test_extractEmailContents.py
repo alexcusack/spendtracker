@@ -18,3 +18,11 @@ class ExtractEmailContentsTestCase(TestCase):
 		}
 		self.assertEqual(getCurrentChargeAmount(input), 1129)
 
+
+	def test_shoudWorkForCloudMailFormat(self):
+		sampleInput = json.load(open('spendTrackerApp/tests/fixtures/cloudmail-sample-body.json'))
+		input = {
+			'plain': sampleInput.get('plain')
+		}
+		self.assertEqual(getCloudMailAmount(input), 17500)
+
