@@ -1,0 +1,40 @@
+{
+  "headers": {
+    "Received": [
+      "from process-dkim-sign-daemon.mr23p40im-ztdg03141501.me.com by mr23p40im-ztdg03141501.me.com (Oracle Communications Messaging Server 8.0.2.2.20180531 64bit (built May 31 2018)) id <0PGJ00I00XX4UG00@mr23p40im-ztdg03141501.me.com> for 6164431505@spndtrckr.com; Sat, 13 Oct 2018 19:33:17 +0000",
+      "from icloud.com ([127.0.0.1]) by mr23p40im-ztdg03141501.me.com (Oracle Communications Messaging Server 8.0.2.2.20180531 64bit (built May 31 2018)) with ESMTPSA id <0PGJ00LVIY9YNU30@mr23p40im-ztdg03141501.me.com> for 6164431505@spndtrckr.com; Sat, 13 Oct 2018 19:33:16 +0000"
+    ],
+    "Date": "Sat, 13 Oct 2018 12:33:16 -0700",
+    "From": "Alex Cusack <cusackalex@me.com>",
+    "To": "6164431505@spndtrckr.com",
+    "Message-ID": "<6531BA4B-024B-433D-BBB8-B1689DBD4BD2@me.com>",
+    "Subject": "Your Single Transaction Alert from Chase",
+    "Mime-Version": "1.0",
+    "Content-Type": "text/plain; charset=us-ascii",
+    "Content-Transfer-Encoding": "quoted-printable",
+    "DKIM-Signature": "v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=04042017;\tt=1539459197; bh=AUasIcCZBYltZYrDnBuAOGtvlOh/htChpV+b93FASfM=;\th=From:Content-type:MIME-version:Subject:Message-id:Date:To;\tb=pMIpLcBRHYT03LX3oK1tLTnOAyFMnFjemswpCXV5gFvnm7VFlm+RQHjsYg160RcAM sfLM6Hlpj62t9mcjpSRrGKELMxpFsn1UaQh1YS4zZn82EfZweWWxmR9VzAm+UmRVXh MQmUctt0gTNT8e8F4iZVcC99zWwN7el/7mIaKQcAeIa9uoelQDWIxKzfuPHTabe8Oa LZXee/N7iIaccv77m01ABi9qHIMiQ2hmP47tnkMhx5B7D45H2tQCDGnljeWewqiU6w abZu/fgKS3Sblc0mq9zIQhR7ivCAWjawotGErbb9j4KHeeX88E3DJ1aIx+iuY6nvMg oQG82/f85a91w==",
+    "X-Proofpoint-Spam-Details": "rule=notspam policy=default score=0 suspectscore=1 malwarescore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011 mlxscore=0 mlxlogscore=583 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1807170000 definitions=main-1810130183",
+    "X-Proofpoint-Virus-Version": "vendor=fsecure engine=2.50.10434:,, definitions=2018-10-13_13:,, signatures=0",
+    "X-Mailer": "Apple Mail (2.3445.9.1)"
+  },
+  "envelope": {
+    "to": "6164431505@spndtrckr.com",
+    "recipients": [
+      "6164431505@spndtrckr.com"
+    ],
+    "from": "cusackalex@me.com",
+    "helo_domain": "mr23p40im-ztdg03141501.me.com",
+    "remote_ip": "17.111.223.75",
+    "tls": true,
+    "spf": {
+      "result": "pass",
+      "domain": "me.com"
+    }
+  },
+  "plain": "\r\nThis is an Alert to help you manage your credit card account ending in 4993.\r\n\r\nAs you requested, we are notifying you of any charges over the amount of ($USD) 0.00, as specified in your Alert settings.\r\nA charge of ($USD) 175.00 at PACIFIC OCULOFACIAL has been authorized on 10/11/2018 1:45:52 PM EDT.\r\n\r\nDo not reply to this Alert.\r\n\r\nIf you have questions, please call the number on the back of your credit card, or send a secure message from your Inbox on www.chase.com.\r\n\r\nTo see all of the Alerts available to you, or to manage your Alert settings, please log on to www.chase.com.\r\n\r\n\t\t\t\r\n",
+  "html": null,
+  "reply_plain": null,
+  "attachments": [
+
+  ]
+}
