@@ -23,6 +23,7 @@ def post_handler(request):
 		log.error('no matching user was found')
 		return None
 	payloadBody = json.loads(request.body.decode('utf-8'))
+	print(payloadBody['headers']['Subject'])
 	charge_amount = getCloudMailAmount(payloadBody)
 	vendor_name = getVendorName(payloadBody)
 	log.info(f'found charge amount of {charge_amount} from {vendor_name}')
