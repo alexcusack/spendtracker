@@ -9,14 +9,15 @@ class ChargeModelFunctionalTests(TestCase):
 		self.user = User.objects.create(phone_number='123456789')
 
 	def testSaveNewCharge(self):
-		Charge.save_new_charge(self.user, 123)
+		Charge.save_new_charge(self.user, 123, 'test vendor')
 		c = Charge.objects.filter(user_id = self.user, amount=123)
 		self.assertEqual(len(c), 1, 'should return one matching row')
 		self.assertEqual(c.get().amount, 123, 'should persist the correct amount')
+		self.assertEqual(c.get().vendor, 'test vendor')
 
 	def testSumByRanges(self):
-		Charge.save_new_charge(self.user, 12)
-		Charge.save_new_charge(self.user, 34)
+		Charge.save_new_charge(self.user, 12, 'test vendor')
+		Charge.save_new_charge(self.user, 34, 'test vendor')
 		week_charges = Charge.get_charges_since_start_of_week()
 		self.assertEqual(week_charges, 46)
 		day_charges = Charge.get_charges_since_start_of_day()

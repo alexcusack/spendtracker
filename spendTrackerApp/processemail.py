@@ -7,7 +7,8 @@ import logging
 from pprint import pprint
 from .sendtext import sendText
 from .extractEmailContents import (
-	getCloudMailAmount
+	getCloudMailAmount,
+	getVendorName
 )
 
 from .models import User, Charge
@@ -20,14 +21,15 @@ def post_handler(request):
 	if not user: 
 		print('no matching user was found')
 		return None
-	print('hello', 'world')
-	chargeAmount = getCloudMailAmount(json.loads(request.body.decode('utf-8')))
-	print(f'found charge amount of {chargeAmount}')
-	Charge.save_new_charge(user.first(), chargeAmount) # save the new charge amount
+	payloadBody = json.loads(request.body.decode('utf-8'))
+	charge_amount = getCloudMailAmount(payloadBody)
+	vendor_name = getVendorName(payloadBody)
+	print(f'found charge amount of {charge_amount} from {vendor_name}')
+	Charge.save_new_charge(user.first(), charge_amount, vendor_name)
 	charges_this_week = Charge.get_charges_since_start_of_week()
 	charges_today = Charge.get_charges_since_start_of_day()
 	try: 
-		text_message = constructTextMessage(chargeAmount, charges_this_week, charges_today)
+		text_message = constructTextMessage(charge_amount, charges_this_week, charges_today, vendor_name)
 	except Exception as err: 
 		print(err.args)
 		return HttpResponse(status=404)
@@ -37,20 +39,21 @@ def post_handler(request):
 		return HttpResponse(status=201)
 
 
-def constructTextMessage(current_charge, charges_this_week, charges_today):
+def constructTextMessage(current_charge, charges_this_week, charges_today, vendor_name):
 	# fix this: we don't want to return and send a string in the case of not 
 	# being able to send a text, else we'll text the error message... :/ 
 	if charges_this_week == None or charges_today == None:
 		raise Exception("expected charges_this_week and charges_today to be non-null values")
 	return """
 	
-		{current_charge} was just spent. 
+		{current_charge} was just spent @ {vendor_name} 
 		{charges_today} so far today. 
 		{charges_this_week} so far this week.
 	""".format(
 			current_charge=formatAsUSD(current_charge),
 			charges_today=formatAsUSD(charges_today),
-			charges_this_week=formatAsUSD(charges_this_week)
+			charges_this_week=formatAsUSD(charges_this_week),
+			vendor_name=vendor_name
 		)
 
 

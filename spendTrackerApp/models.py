@@ -28,8 +28,8 @@ class Charge(models.Model):
     def __str__(self):
         return str(self.id)
 
-    def save_new_charge(user, amount):
-        new_charge = Charge(user_id = user, amount=amount, vendor='not set', time_of_charge=timezone.now())
+    def save_new_charge(user, amount, vendor):
+        new_charge = Charge(user_id = user, amount=amount, vendor=vendor, time_of_charge=timezone.now())
         return new_charge.save()
 
     def get_charges_since_start_of_week():
