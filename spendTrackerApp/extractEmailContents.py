@@ -32,4 +32,10 @@ def getCloudMailAmount(data):
 	return _asCents(chargeAmount[0])
 
 
+def getVendorName(data):	
+	message = _getChargeString(data['plain'])
+	return message.split('at')[1].split('has')[0].strip().lower()
+	# at PACIFIC OCULOFACIAL has 
+
+
 

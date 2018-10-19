@@ -26,3 +26,11 @@ class ExtractEmailContentsTestCase(TestCase):
 		}
 		self.assertEqual(getCloudMailAmount(input), 17500)
 
+
+	def test_getVendorName(self):
+		sampleInput = json.load(open('spendTrackerApp/tests/fixtures/cloudmail-sample-body.json'))
+		input = {
+			'plain': sampleInput.get('plain')
+		}
+		self.assertEqual(getVendorName(input), 'pacific oculofacial')
+
