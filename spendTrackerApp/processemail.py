@@ -13,28 +13,29 @@ from .extractEmailContents import (
 
 from .models import User, Charge
 
-log = logging.getLogger('my thing')
+log = logging.getLogger('email-processing')
 
 @csrf_exempt
 def post_handler(request):
+	log.info('processing request')
 	user = User.lookup_user('6164431505')
 	if not user: 
-		print('no matching user was found')
+		log.error('no matching user was found')
 		return None
 	payloadBody = json.loads(request.body.decode('utf-8'))
 	charge_amount = getCloudMailAmount(payloadBody)
 	vendor_name = getVendorName(payloadBody)
-	print(f'found charge amount of {charge_amount} from {vendor_name}')
+	log.info(f'found charge amount of {charge_amount} from {vendor_name}')
 	Charge.save_new_charge(user.first(), charge_amount, vendor_name)
 	charges_this_week = Charge.get_charges_since_start_of_week()
 	charges_today = Charge.get_charges_since_start_of_day()
 	try: 
 		text_message = constructTextMessage(charge_amount, charges_this_week, charges_today, vendor_name)
 	except Exception as err: 
-		print(err.args)
+		log.error(err)
 		return HttpResponse(status=404)
 	else: 
-		pprint(text_message)
+		log.info('message sent', text_message)
 		sendText(text_message, '6164431505')
 		return HttpResponse(status=201)
 
