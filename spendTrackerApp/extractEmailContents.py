@@ -17,6 +17,8 @@ def _extractFields(inputPayload, *args):
 
 
 def _getChargeString(textBody):
+	print('text body is:')
+	print(textBody)
 	return textBody.split('\r\n')[4]
 
 
