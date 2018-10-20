@@ -32,7 +32,7 @@ class Charge(models.Model):
         new_charge = Charge(user_id = user, amount=amount, vendor=vendor, time_of_charge=timezone.now())
         return new_charge.save()
 
-    def get_charges_since_start_of_week():
+    def get_charges_since_start_of_week(user_id):
         sum = 0
         for charge in Charge.objects.raw(
             # we can't do a summation here because Django requires including the 
@@ -40,21 +40,23 @@ class Charge(models.Model):
             """
             select id, amount
             from "spendTrackerApp_charge" 
-            where time_of_charge >= date_trunc('week', now());
+            where time_of_charge >= date_trunc('week', now())
+            and user_id_id = %s;
             """
-        ):
+        , [user_id]):
             sum += charge.amount
         return sum
 
-    def get_charges_since_start_of_day(): 
+    def get_charges_since_start_of_day(user_id): 
         sum = 0
         for charge in Charge.objects.raw(
             """
             select id, amount
             from "spendTrackerApp_charge" 
-            where time_of_charge >= date_trunc('day', now())::date - interval '7 hours';
+            where time_of_charge >= date_trunc('day', now())::date - interval '7 hours'
+            and user_id_id = %s;
             """
-        ):
+        , [user_id]):
             sum += charge.amount
         return sum
 

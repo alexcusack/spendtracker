@@ -17,19 +17,19 @@ log = logging.getLogger('herokulogs')
 @csrf_exempt
 def post_handler(request):
 	log.info('processing request')
-	user = User.lookup_user('6164431505')
-	if not user: 
-		log.error('no matching user was found')
-		return None
 	payloadBody = json.loads(request.body.decode('utf-8'))
-	print(payloadBody['headers']['Subject'])
 	tokenized = tokenizeFromCloudMail(payloadBody)
 	charge_amount = tokenized['charge_amount']
 	vendor_name = tokenized['vendor_name']
-	log.info(f'found charge amount of {charge_amount} from {vendor_name}')
-	Charge.save_new_charge(user.first(), charge_amount, vendor_name)
-	charges_this_week = Charge.get_charges_since_start_of_week()
-	charges_today = Charge.get_charges_since_start_of_day()
+	to = tokenized['to']
+	user = User.lookup_user(to).first()
+	if not user: 
+		log.warn(f'no user found matching {to}')
+		return None
+	log.info(f'Processing charge for {to}. {charge_amount} from {vendor_name}')
+	Charge.save_new_charge(user, charge_amount, vendor_name)
+	charges_this_week = Charge.get_charges_since_start_of_week(user.id)
+	charges_today = Charge.get_charges_since_start_of_day(user.id)
 	try: 
 		text_message = constructTextMessage(charge_amount, charges_this_week, charges_today, vendor_name)
 	except Exception as err: 
@@ -37,7 +37,7 @@ def post_handler(request):
 		return HttpResponse(status=404)
 	else: 
 		log.info('message sent', text_message)
-		sendText(text_message, '6164431505')
+		sendText(text_message, user.phone_number)
 		return HttpResponse(status=201)
 
 
