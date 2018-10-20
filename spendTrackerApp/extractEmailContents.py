@@ -2,12 +2,6 @@ import json
 import re
 from pprint import pprint
 
-def getCurrentChargeAmount(data):
-	relevantPayload = _extractFields(data, 'FromName', 'TextBody')
-	chargeString = _getChargeString(relevantPayload['TextBody'])
-	chargeAmount = _getDollarsFromString(chargeString)
-	return _asCents(chargeAmount[0])
-
 def _extractFields(inputPayload, *args): 
 	relevantPayload = dict()
 	for key in args:
