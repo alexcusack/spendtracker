@@ -7,13 +7,12 @@ import logging
 from pprint import pprint
 from .sendtext import sendText
 from .extractEmailContents import (
-	getCloudMailAmount,
-	getVendorName
+	tokenizeFromCloudMail
 )
 
 from .models import User, Charge
 
-log = logging.getLogger('email-processing')
+log = logging.getLogger('herokulogs')
 
 @csrf_exempt
 def post_handler(request):
@@ -24,8 +23,9 @@ def post_handler(request):
 		return None
 	payloadBody = json.loads(request.body.decode('utf-8'))
 	print(payloadBody['headers']['Subject'])
-	charge_amount = getCloudMailAmount(payloadBody)
-	vendor_name = getVendorName(payloadBody)
+	tokenized = tokenizeFromCloudMail(payloadBody)
+	charge_amount = tokenized['charge_amount']
+	vendor_name = tokenized['vendor_name']
 	log.info(f'found charge amount of {charge_amount} from {vendor_name}')
 	Charge.save_new_charge(user.first(), charge_amount, vendor_name)
 	charges_this_week = Charge.get_charges_since_start_of_week()

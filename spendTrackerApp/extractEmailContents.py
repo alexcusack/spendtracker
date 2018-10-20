@@ -5,7 +5,7 @@ from pprint import pprint
 def getCurrentChargeAmount(data):
 	relevantPayload = _extractFields(data, 'FromName', 'TextBody')
 	chargeString = _getChargeString(relevantPayload['TextBody'])
-	chargeAmount = _getChargeAmount(chargeString)
+	chargeAmount = _getDollarsFromString(chargeString)
 	return _asCents(chargeAmount[0])
 
 def _extractFields(inputPayload, *args): 
@@ -17,27 +17,24 @@ def _extractFields(inputPayload, *args):
 
 
 def _getChargeString(textBody):
-	print('text body is:')
-	print(textBody.split('\r\n'))
 	return textBody.split('\r\n')[4]
 
 
-def _getChargeAmount(string):
+def _getDollarsFromString(string):
 	return re.findall(r'\d+\.\d+', string)
 
 def _asCents(dollarString):
 	return int(round(float(dollarString)*100))
 
+def tokenizeFromCloudMail(data):
+	splitBody = data['plain'].split('\n\n')
+	chargeString = splitBody[1]
+	vendorName = splitBody[1].split('at')[1].split('has')[0].strip().lower()
+	return {
+		'charge_amount': _asCents(_getDollarsFromString(chargeString)[1]),
+		'vendor_name': vendorName
+	}
 
-def getCloudMailAmount(data):
-	chargeAmount = _getChargeAmount(_getChargeString(data['plain']))
-	return _asCents(chargeAmount[0])
-
-
-def getVendorName(data):	
-	message = _getChargeString(data['plain'])
-	return message.split('at')[1].split('has')[0].strip().lower()
-	# at PACIFIC OCULOFACIAL has 
 
 
 

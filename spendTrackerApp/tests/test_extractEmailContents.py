@@ -18,19 +18,13 @@ class ExtractEmailContentsTestCase(TestCase):
 		}
 		self.assertEqual(getCurrentChargeAmount(input), 1129)
 
-
-	def test_shoudWorkForCloudMailFormat(self):
+	def test_tokenizeFromCloudMail(self):
 		sampleInput = json.load(open('spendTrackerApp/tests/fixtures/cloudmail-sample-body.json'))
 		input = {
 			'plain': sampleInput.get('plain')
 		}
-		self.assertEqual(getCloudMailAmount(input), 17500)
-
-
-	def test_getVendorName(self):
-		sampleInput = json.load(open('spendTrackerApp/tests/fixtures/cloudmail-sample-body.json'))
-		input = {
-			'plain': sampleInput.get('plain')
-		}
-		self.assertEqual(getVendorName(input), 'pacific oculofacial')
+		self.assertEqual(tokenizeFromCloudMail(input), {
+			'charge_amount': 1299,
+			'vendor_name': 'apl*itunes.com/bill'
+		})
 
