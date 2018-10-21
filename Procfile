@@ -1,1 +1,1 @@
-web: gunicorn spendtracker.wsgi
+web: PYTHONUNBUFFERED=True gunicorn spendtracker.wsgi
