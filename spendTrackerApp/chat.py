@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from twilio.twiml.messaging_response import MessagingResponse
 
+from .models import User
 
 
 @csrf_exempt
@@ -12,6 +13,8 @@ def handle_message(request):
 	params = request.POST
 	phone = re.sub('\+1','',params['From'])
 	message = params['Body']
+	if message.strip().lower() == 'signup':
+		create_user(phone)
 	reply = get_reply_string(request.POST)
 	return HttpResponse(create_twilio_reply(reply))
 
@@ -40,3 +43,10 @@ def create_twilio_reply(message_str):
 	resp = MessagingResponse()
 	resp.message(message_str)
 	return str(resp)
+
+
+def create_user(phone_number):
+	user, was_created = User.objects.get_or_create(
+		phone_number=re.sub('\+1','', phone_number)
+	)
+	return user
