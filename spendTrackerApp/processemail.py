@@ -12,7 +12,7 @@ from .extractEmailContents import (
 
 from .models import User, Charge
 
-log = logging.getLogger('herokulogs')
+log = logging.getLogger('email-processing-logs')
 
 @csrf_exempt
 def post_handler(request):

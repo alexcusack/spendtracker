@@ -1,17 +1,26 @@
-import json
 import re
+import json
+import logging
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from twilio.twiml.messaging_response import MessagingResponse
 
 from .models import User
 
+log = logging.getLogger('django-chat-logs')
+logAgain = logging.getLogger(__name__)
 
 @csrf_exempt
 def handle_message(request):
 	"""Respond to incoming messages with a friendly SMS."""	
 	params = request.POST
 	phone = re.sub('\+1','',params['From'])
+	logAgain.debug('PLZ debug')
+	logAgain.info('PLZ INFO')
+	logAgain.error('PLZ ERROR')
+	log.debug('LOG: PLZ debug')
+	log.info('LOG: PLZ INFO')
+	log.error('LOG: PLZ ERROR')
 	message = params['Body']
 	if message.strip().lower() == 'signup':
 		create_user(phone)
