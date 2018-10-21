@@ -12,10 +12,8 @@ def handle_message(request):
 	params = request.POST
 	phone = re.sub('\+1','',params['From'])
 	message = params['Body']
-	reply = get_reply(request.POST)
-	resp = MessagingResponse()
-	resp.message(reply)
-	return HttpResponse(str(resp))
+	reply = get_reply_string(request.POST)
+	return HttpResponse(create_twilio_reply(reply))
 
 
 
@@ -29,10 +27,16 @@ message_to_reply = {
 }
 
 
-def get_reply(params):
+def get_reply_string(params):
 	from_phone = re.sub('\+1','',params['From'])
 	message = params['Body'].strip().lower()
 	interpolable_args = {
 		'phone': from_phone
 	}
 	return message_to_reply.get(message, message_to_reply.get('default')).format(**interpolable_args)
+
+
+def create_twilio_reply(message_str):
+	resp = MessagingResponse()
+	resp.message(message_str)
+	return str(resp)
