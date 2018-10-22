@@ -23,11 +23,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
 import django_heroku
+import logging.config
 
 LOGGING = {
     'version': 1,
@@ -44,31 +45,20 @@ LOGGING = {
         }
     },
     'handlers': {
-        'null': {
-            'level': 'DEBUG',
-            'class': 'logging.NullHandler',
-        },
         'console': {
             'class': 'logging.StreamHandler',
-            'level': 'TRACE'
+            'level': 'DEBUG'
         }
     },
     'loggers': {
         '': {
             'handlers': ['console'],
-            'level': 'TRACE',
-        },
-        'django-email-processing-logs': {
-            'handlers': ['console'],
-            'level': 'TRACE',
-        },
-        'django-chat-logs': {
-            'handlers': ['console'],
-            'level': 'TRACE',
+            'level': 'DEBUG',
         }
     }
 }
 
+logging.config.dictConfig(LOGGING)
 # Application definition
 
 INSTALLED_APPS = [

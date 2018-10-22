@@ -12,11 +12,11 @@ from .extractEmailContents import (
 
 from .models import User, Charge
 
-log = logging.getLogger('email-processing-logs')
+log = logging.getLogger(__name__)
 
 @csrf_exempt
 def post_handler(request):
-	log.info('processing request')
+	log.info('processing inbound email')
 	payloadBody = json.loads(request.body.decode('utf-8'))
 	tokenized = tokenizeFromCloudMail(payloadBody)
 	charge_amount = tokenized['charge_amount']
