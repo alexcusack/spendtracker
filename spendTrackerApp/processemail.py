@@ -47,9 +47,9 @@ def constructTextMessage(current_charge, charges_this_week, charges_today, vendo
 	if charges_this_week == None or charges_today == None:
 		raise Exception("expected charges_this_week and charges_today to be non-null values")
 	return """
-	{current_charge} was just spent @ {vendor_name} 
-	{charges_today} so far today. 
-	{charges_this_week} so far this week.
+{current_charge} was just spent @ {vendor_name}
+{charges_today} so far today.
+{charges_this_week} so far this week.
 	""".format(
 			current_charge=formatAsUSD(current_charge),
 			charges_today=formatAsUSD(charges_today),
