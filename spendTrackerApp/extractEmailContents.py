@@ -27,8 +27,6 @@ def _getSubject(data):
 	return data['headers']['Subject'].lower()
 
 def tokenizeFromCloudMail(data):
-	if 'plain' not in data:
-		return {}
 	splitBody = data['plain'].split('\n\n')
 	chargeString = splitBody[1]
 	vendorName = splitBody[1].split('at')[1].split('has')[0].strip().lower()

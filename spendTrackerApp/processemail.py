@@ -19,8 +19,6 @@ def post_handler(request):
 	log.info('processing inbound email')
 	payloadBody = json.loads(request.body.decode('utf-8'))
 	tokenized = tokenizeFromCloudMail(payloadBody)
-	if not bool(tokenized): # unparsable
-		return HttpResponse(status=299)
 	charge_amount = tokenized['charge_amount']
 	vendor_name = tokenized['vendor_name']
 	subject = tokenized['subject']
