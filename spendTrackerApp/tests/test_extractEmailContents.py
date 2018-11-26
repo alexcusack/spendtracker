@@ -11,11 +11,13 @@ class ExtractEmailContentsTestCase(TestCase):
 		sampleInput = json.load(open('spendTrackerApp/tests/fixtures/cloudmail-sample-body.json'))
 		input = {
 			'envelope': sampleInput.get('envelope'),
+			'headers': sampleInput.get('headers'),
 			'plain': sampleInput.get('plain')
 		}
 		self.assertEqual(tokenizeFromCloudMail(input), {
 			'to': '6164431505',
 			'charge_amount': 1299,
-			'vendor_name': 'apl*itunes.com/bill'
+			'vendor_name': 'apl*itunes.com/bill', 
+			'subject': 'your single transaction alert from chase'
 		})
 

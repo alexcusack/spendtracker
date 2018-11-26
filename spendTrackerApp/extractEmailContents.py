@@ -23,6 +23,9 @@ def _asCents(dollarString):
 def _getToField(data):
 	return data['envelope']['to'].split('@')[0]
 
+def _getSubject(data):
+	return data['headers']['Subject'].lower()
+
 def tokenizeFromCloudMail(data):
 	splitBody = data['plain'].split('\n\n')
 	chargeString = splitBody[1]
@@ -30,7 +33,8 @@ def tokenizeFromCloudMail(data):
 	return {
 		'to': _getToField(data),
 		'charge_amount': _asCents(_getDollarsFromString(chargeString)[1]),
-		'vendor_name': vendorName
+		'vendor_name': vendorName,
+		'subject': _getSubject(data)
 	}
 
 
