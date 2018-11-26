@@ -16,32 +16,36 @@ log = logging.getLogger(__name__)
 
 @csrf_exempt
 def post_handler(request):
-	log.info('processing inbound email')
-	payloadBody = json.loads(request.body.decode('utf-8'))
-	tokenized = tokenizeFromCloudMail(payloadBody)
-	charge_amount = tokenized['charge_amount']
-	vendor_name = tokenized['vendor_name']
-	subject = tokenized['subject']
-	to = tokenized['to']
-	user = User.lookup_user(to).first()
-	if not user: 
-		log.warn(f'no user found matching {to}')
-		return None
-	if subject != 'your single transaction alert from chase':
-		return HttpResponse(status=299) # 204 because cloudmail will retry non-200 reponses
-	log.info(f'Processing charge for {to}. {charge_amount} from {vendor_name}')
-	Charge.save_new_charge(user, charge_amount, vendor_name)
-	charges_this_week = Charge.get_charges_since_start_of_week(user.id)
-	charges_today = Charge.get_charges_since_start_of_day(user.id)
-	try: 
-		text_message = constructTextMessage(charge_amount, charges_this_week, charges_today, vendor_name)
-	except Exception as err: 
-		log.error(err)
-		return HttpResponse(status=404)
-	else: 
-		log.info('message sent')
-		sendText(text_message, user.phone_number)
-		return HttpResponse(status=201)
+	try:
+		log.info('processing inbound email')
+		payloadBody = json.loads(request.body.decode('utf-8'))
+		tokenized = tokenizeFromCloudMail(payloadBody)
+		charge_amount = tokenized['charge_amount']
+		vendor_name = tokenized['vendor_name']
+		subject = tokenized['subject']
+		to = tokenized['to']
+		user = User.lookup_user(to).first()
+		if not user: 
+			log.warn(f'no user found matching {to}')
+			return None
+		if subject != 'your single transaction alert from chase':
+			return HttpResponse(status=299) # 204 because cloudmail will retry non-200 reponses
+		log.info(f'Processing charge for {to}. {charge_amount} from {vendor_name}')
+		Charge.save_new_charge(user, charge_amount, vendor_name)
+		charges_this_week = Charge.get_charges_since_start_of_week(user.id)
+		charges_today = Charge.get_charges_since_start_of_day(user.id)
+		try: 
+			text_message = constructTextMessage(charge_amount, charges_this_week, charges_today, vendor_name)
+		except Exception as err: 
+			log.error(err)
+			return HttpResponse(status=404)
+		else: 
+			log.info('message sent')
+			sendText(text_message, user.phone_number)
+			return HttpResponse(status=201)
+	except Exception as e:
+		log.error(e)
+		return HttpResponse(status=299)
 
 
 def constructTextMessage(current_charge, charges_this_week, charges_today, vendor_name):
