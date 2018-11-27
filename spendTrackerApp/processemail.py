@@ -38,14 +38,14 @@ def post_handler(request):
 		try: 
 			text_message = constructTextMessage(charge_amount, charges_this_week, charges_today, vendor_name)
 		except Exception as err: 
-			log.error(err)
+			log.info(err)
 			return HttpResponse(status=404)
 		else: 
 			log.info('message sent')
 			sendText(text_message, user.phone_number)
 			return HttpResponse(status=201)
 	except Exception as e:
-		log.error(e)
+		log.info(e)
 		log.info(payloadBody)
 		return HttpResponse(status=299)
 
