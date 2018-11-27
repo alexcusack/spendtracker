@@ -45,6 +45,7 @@ def post_handler(request):
 			return HttpResponse(status=201)
 	except Exception as e:
 		log.error(e)
+		log.info(payloadBody)
 		return HttpResponse(status=299)
 
 
