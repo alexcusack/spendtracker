@@ -29,6 +29,7 @@ def post_handler(request):
 			log.warn(f'no user found matching {to}')
 			return None
 		if subject != 'your single transaction alert from chase':
+			log.info('exiting due to incorrect subject line')
 			return HttpResponse(status=299) # 204 because cloudmail will retry non-200 reponses
 		log.info(f'Processing charge for {to}. {charge_amount} from {vendor_name}')
 		Charge.save_new_charge(user, charge_amount, vendor_name)
