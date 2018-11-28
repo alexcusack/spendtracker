@@ -1,6 +1,7 @@
 import json
 import re
 from pprint import pprint
+from requests_html import HTML
 
 def _extractFields(inputPayload, *args): 
 	relevantPayload = dict()
@@ -25,6 +26,19 @@ def _getToField(data):
 
 def _getSubject(data):
 	return data['headers']['Subject'].lower()
+
+def tokenizeFromCloudMailHTML(data): 
+	html = HTML(html=data['html'])
+	relevantString = html.find('br')[1].text
+	vendorName = relevantString.split('at')[1].split('has')[0].strip().lower()
+	# print(_getDollarsFromString(relevantString))
+	# print(vendorName)
+	return {
+		'to': _getToField(data), 
+		'charge_amount': _asCents(_getDollarsFromString(relevantString)[1]),
+		'vendor_name': vendorName,
+		'subject': _getSubject(data)
+	}
 
 def tokenizeFromCloudMail(data):
 	splitBody = data['plain'].split('\n\n')

@@ -19,7 +19,17 @@ def post_handler(request):
 	try:
 		log.info('processing inbound email')
 		payloadBody = json.loads(request.body.decode('utf-8'))
-		tokenized = tokenizeFromCloudMail(payloadBody)
+		if payloadBody['plain'] is None:
+			 log.info('payloadBody.plain not set, exiting')
+			 return HttpResponse(status=299)
+		tokenized = None
+		if payloadBody['plain'] is not None:
+			tokenized = tokenizeFromCloudMail(payloadBody)
+		elif payloadBody['html'] is not None:
+			tokenized = tokenizeFromCloudMailHTML(payloadBody)
+		else: 
+			log.info('neither payloadBody.plain or .html were populated, exiting..')
+			return HttpResponse(status=299)
 		charge_amount = tokenized['charge_amount']
 		vendor_name = tokenized['vendor_name']
 		subject = tokenized['subject']
@@ -30,7 +40,7 @@ def post_handler(request):
 			return None
 		if subject != 'your single transaction alert from chase':
 			log.info('exiting due to incorrect subject line')
-			return HttpResponse(status=299) # 204 because cloudmail will retry non-200 reponses
+			return HttpResponse(status=299)
 		log.info(f'Processing charge for {to}. {charge_amount} from {vendor_name}')
 		Charge.save_new_charge(user, charge_amount, vendor_name)
 		charges_this_week = Charge.get_charges_since_start_of_week(user.id)
