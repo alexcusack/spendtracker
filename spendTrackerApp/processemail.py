@@ -19,9 +19,6 @@ def post_handler(request):
 	try:
 		log.info('processing inbound email')
 		payloadBody = json.loads(request.body.decode('utf-8'))
-		if payloadBody['plain'] is None:
-			 log.info('payloadBody.plain not set, exiting')
-			 return HttpResponse(status=299)
 		tokenized = None
 		if payloadBody['plain'] is not None:
 			tokenized = tokenizeFromCloudMail(payloadBody)
