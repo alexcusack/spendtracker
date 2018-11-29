@@ -7,7 +7,8 @@ import logging
 from pprint import pprint
 from .sendtext import sendText
 from .extractEmailContents import (
-	tokenizeFromCloudMail
+	tokenizeFromCloudMail,
+	tokenizeFromCloudMailHTML
 )
 
 from .models import User, Charge
