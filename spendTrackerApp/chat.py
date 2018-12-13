@@ -32,8 +32,9 @@ message_to_reply = {
 	'default': "Would you like to signup to recieve spending alerts? Reply with 'signup'",
 
 	'signup': """You\'re signed up!
-		Configure your chase email alerts to be sent to
+		Configure to send alerts to:
 		{phone}@spndtrckr.com
+		Instructions: https://github.com/alexcusack/spendtracker/blob/master/README.md
 		"""
 }
 
