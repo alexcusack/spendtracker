@@ -40,7 +40,7 @@ class Charge(models.Model):
             """
             select id, amount
             from "spendTrackerApp_charge" 
-            where time_of_charge >= date_trunc('week', now())
+            where date_trunc('week', time_of_charge - interval '8 hours') >= date_trunc('week', now() - interval '8 hours')
             and user_id_id = %s;
             """
         , [user_id]):
@@ -53,7 +53,7 @@ class Charge(models.Model):
             """
             select id, amount
             from "spendTrackerApp_charge" 
-            where time_of_charge >= date_trunc('day', now())::date - interval '7 hours'
+            where date_trunc('day', time_of_charge - interval '8 hours') >= date_trunc('day', now() - interval '8 hours')
             and user_id_id = %s;
             """
         , [user_id]):
