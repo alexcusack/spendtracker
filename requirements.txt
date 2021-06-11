@@ -32,6 +32,6 @@ tqdm==4.28.1
 twilio==6.16.4
 urllib3==1.23
 w3lib==1.19.0
-websockets==7.0
+websockets==9.1
 whitenoise==4.1
 wrapt==1.10.11
